@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { config, useClient, useMicrophoneAndCameraTracks, channelName } from "./settings";
 import { Grid } from "@material-ui/core";
+import Controls from "./Controls";
+import Video from "./Video";
 
 export default function VideoCall(props) {
     const { setInCall } = props;
@@ -56,6 +58,7 @@ export default function VideoCall(props) {
         };
 
         if (ready && tracks) {
+            console.log("APP ID: ", config.appId, "\nTOKEN: ", config.token)
             try {
                 init(channelName);
             } catch (error) {
@@ -65,4 +68,15 @@ export default function VideoCall(props) {
 
      }, [channelName, client, ready, tracks]);
 
+
+     return (
+        <Grid container direction="column" style={{height: "100%"}}>
+            <Grid item style={{height: "5%"}}>
+                { ready && tracks && (<Controls tracks={tracks} setStart={setStart} setInCall={setInCall} />) }
+            </Grid>
+            <Grid item style={{height: "95%"}}>
+                { start && tracks && (<Video tracks={tracks} users={users} />) }
+            </Grid>
+        </Grid>
+     );
 };
